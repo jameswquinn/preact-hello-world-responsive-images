@@ -1,0 +1,15 @@
+project-root/
+│
+├── src/
+│   ├── app.js
+│   ├── index.html
+│   └── example.png
+│
+├── public/
+│   └── (empty for now, but you can add static assets here)
+│
+├── package.json
+├── webpack.config.js
+├── vercel.json
+├── .gitignore
+└── README.md
