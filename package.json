@@ -8,8 +8,8 @@
   },
   "scripts": {
     "dev": "webpack serve --mode development",
-    "build": "webpack --mode production --progress",
-    "debug": "node --trace-warnings node_modules/.bin/webpack --mode production",
+    "prebuild": "node -e \"console.log('Node version:', process.version); console.log('NPM version:', require('child_process').execSync('npm -v').toString()); console.log('Directory contents:', require('fs').readdirSync('.'));\"",
+    "build": "webpack --mode production",
     "start": "serve dist"
   },
   "keywords": [
