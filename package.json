@@ -1,42 +1,23 @@
 {
-  "name": "preact-hello-world-responsive-images",
-  "version": "1.0.0",
-  "description": "A simple Preact Hello World app with responsive images",
-  "main": "src/app.js",
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "scripts": {
-    "dev": "webpack serve --mode development",
-    "prebuild": "node -e \"console.log('Node version:', process.version); console.log('NPM version:', require('child_process').execSync('npm -v').toString()); console.log('Directory contents:', require('fs').readdirSync('.'));\"",
-    "build": "webpack --mode production",
-    "start": "serve dist"
-  },
-  "keywords": [
-    "preact",
-    "responsive-images",
-    "webpack",
-    "vercel"
-  ],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "preact": "^10.5.15",
-    "serve": "^14.2.0"
+    "preact": "^10.5.13"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.0",
-    "@babel/plugin-transform-react-jsx": "^7.14.9",
-    "@babel/preset-env": "^7.15.0",
-    "@babel/preset-react": "^7.14.5",
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.2",
+    "@babel/preset-react": "^7.13.13",
     "babel-loader": "^8.2.2",
-    "copy-webpack-plugin": "^9.0.1",
-    "fs-extra": "^10.0.0",
-    "html-webpack-plugin": "^5.3.2",
+    "css-loader": "^5.2.6",
+    "html-webpack-plugin": "^5.3.1",
     "responsive-loader": "^2.3.0",
-    "sharp": "^0.29.0",
-    "webpack": "^5.50.0",
-    "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.0.0"
+    "sharp": "^0.30.5",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "scripts": {
+    "start": "webpack serve --mode development",
+    "build": "webpack --mode production"
   }
 }
