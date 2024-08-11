@@ -6,8 +6,7 @@
       "use": "@vercel/static-build",
       "config": { 
         "distDir": "dist",
-        "nodeVersion": "14.x",
-        "buildCommand": "npm run debug"
+        "nodeVersion": "14.x"
       }
     }
   ],
