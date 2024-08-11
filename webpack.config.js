@@ -1,37 +1,105 @@
-{
-  "name": "preact-hello-world-responsive-images",
-  "version": "1.0.0",
-  "description": "A simple Preact Hello World app with responsive images",
-  "main": "src/app.js",
-  "scripts": {
-    "dev": "webpack serve --mode development",
-    "build": "webpack --mode production",
-    "start": "serve dist"
+const path = require('path');
+const sharp = require('sharp');
+const ResponsiveLoaderSharp = require('responsive-loader/sharp');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+module.exports = {
+  entry: './src/app.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.[contenthash].js',
+    clean: true,
   },
-  "keywords": [
-    "preact",
-    "responsive-images",
-    "webpack",
-    "vercel"
+  resolve: {
+    extensions: ['.js', '.jsx'],
+    alias: {
+      'react': 'preact/compat',
+      'react-dom': 'preact/compat',
+    },
+  },
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+            plugins: [
+              ['@babel/plugin-transform-react-jsx', { pragma: 'h', pragmaFrag: 'Fragment' }]
+            ],
+          },
+        },
+      },
+      {
+        test: /\.(png|jpe?g)$/i,
+        use: [
+          {
+            loader: 'responsive-loader',
+            options: {
+              adapter: ResponsiveLoaderSharp,
+              name: 'images/[name]-[width].[ext]',
+              sizes: [320, 640, 960, 1200, 1800, 2400],
+              format: 'webp',
+              quality: 80,
+              placeholder: true,
+              placeholderSize: 20,
+              esModule: true,
+              formatter: function(filename, width) {
+                return filename + '?w=' + width;
+              },
+              formatWebp: function(filename, width) {
+                return filename + '.webp?w=' + width;
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'public', to: '' },
+      ],
+    }),
+    {
+      apply: function(compiler) {
+        compiler.hooks.emit.tapAsync('GeneratePngJpegAssets', function(compilation, callback) {
+          var assets = compilation.assets;
+
+          Object.keys(assets).forEach(function(filename) {
+            if (filename.endsWith('.webp')) {
+              var pngJpegFilename = filename.replace('.webp', '');
+              var sourceBuffer = assets[filename].source();
+
+              sharp(sourceBuffer)
+                .metadata()
+                .then(function(metadata) {
+                  var hasAlpha = metadata.hasAlpha;
+                  return sharp(sourceBuffer)[hasAlpha ? 'png' : 'jpeg']().toBuffer();
+                })
+                .then(function(outputBuffer) {
+                  compilation.assets[pngJpegFilename] = {
+                    source: function() { return outputBuffer; },
+                    size: function() { return outputBuffer.length; }
+                  };
+                })
+                .catch(function(error) {
+                  console.error('Error processing ' + filename + ':', error);
+                });
+            }
+          });
+
+          callback();
+        });
+      },
+    },
   ],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "preact": "^10.5.15",
-    "serve": "^14.2.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.15.0",
-    "@babel/plugin-transform-react-jsx": "^7.14.9",
-    "@babel/preset-env": "^7.15.0",
-    "@babel/preset-react": "^7.14.5",
-    "babel-loader": "^8.2.2",
-    "copy-webpack-plugin": "^9.0.1",
-    "html-webpack-plugin": "^5.3.2",
-    "responsive-loader": "^2.3.0",
-    "sharp": "^0.29.0",
-    "webpack": "^5.50.0",
-    "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.0.0"
-  }
-}
+};
