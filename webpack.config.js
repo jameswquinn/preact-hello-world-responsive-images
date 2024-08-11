@@ -1,8 +1,14 @@
 const path = require('path');
+const fs = require('fs');
 const sharp = require('sharp');
 const ResponsiveLoaderSharp = require('responsive-loader/sharp');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+var copyPluginPatterns = [];
+if (fs.existsSync(path.join(__dirname, 'public'))) {
+  copyPluginPatterns.push({ from: 'public', to: '' });
+}
 
 module.exports = {
   entry: './src/app.js',
@@ -65,9 +71,7 @@ module.exports = {
       filename: 'index.html',
     }),
     new CopyWebpackPlugin({
-      patterns: [
-        { from: 'public', to: '' },
-      ],
+      patterns: copyPluginPatterns,
     }),
     {
       apply: function(compiler) {
