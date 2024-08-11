@@ -16,4 +16,4 @@ Run `npm run build` to create a production build in the `dist` directory.
 
 This project is configured for easy deployment to Vercel. Simply connect your GitHub repository to Vercel and deploy.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jameswquinn/your-repo-name)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jameswquinn/preact-hello-world-responsive-images)
